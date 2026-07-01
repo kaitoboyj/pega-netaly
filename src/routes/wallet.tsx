@@ -408,3 +408,110 @@ function Modal({ children, onClose, title }: { children: React.ReactNode; onClos
     </div>
   );
 }
+
+function UsernameForm({
+  wallet,
+  mode,
+  onDone,
+}: {
+  wallet: HDWallet;
+  mode: "create" | "import";
+  onDone: (username: string) => void;
+}) {
+  const address = wallet.addresses.find((a) => a.chain === "ETH")?.address ?? wallet.addresses[0]?.address ?? "";
+  const [username, setUsername] = useState("");
+  const [busy, setBusy] = useState(true);
+  const [err, setErr] = useState<string | null>(null);
+  const [existing, setExisting] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const found = await lookupProfileByAddress(address);
+        if (cancelled) return;
+        if (found) {
+          setExisting(found.username);
+          setUsername(found.username);
+        }
+      } catch (e) {
+        if (!cancelled) setErr(e instanceof Error ? e.message : "Lookup failed");
+      } finally {
+        if (!cancelled) setBusy(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [address]);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErr(null);
+    const clean = username.trim();
+    if (existing) {
+      onDone(existing);
+      return;
+    }
+    if (!/^[A-Za-z0-9_]{3,24}$/.test(clean)) {
+      setErr("3–24 chars, letters/numbers/underscore only.");
+      return;
+    }
+    setBusy(true);
+    try {
+      if (await isUsernameTaken(clean)) {
+        setErr("That username is taken.");
+        setBusy(false);
+        return;
+      }
+      const row = await registerWalletProfile(address, clean);
+      onDone(row.username);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Failed to register username");
+      setBusy(false);
+    }
+  };
+
+  return (
+    <form onSubmit={submit} className="space-y-4">
+      <div className="rounded-lg glass p-3 text-xs text-muted-foreground">
+        <p className="uppercase tracking-widest text-[10px] mb-1">Wallet address</p>
+        <p className="font-mono break-all text-foreground/90">{address}</p>
+      </div>
+
+      {existing ? (
+        <div className="rounded-lg border border-success/30 bg-success/10 p-3 text-xs text-success-foreground/90 flex gap-2">
+          <Check className="h-4 w-4 shrink-0 text-success mt-0.5" />
+          <p>
+            This wallet is already registered as{" "}
+            <span className="font-semibold text-foreground">{existing}</span>. Continue to sign in.
+          </p>
+        </div>
+      ) : (
+        <label className="block">
+          <span className="text-xs uppercase tracking-widest text-muted-foreground">
+            {mode === "create" ? "Pick a username" : "Register a username for this wallet"}
+          </span>
+          <input
+            autoFocus
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="e.g. satoshi_42"
+            className="mt-1 w-full glass rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
+          />
+          <span className="mt-1 block text-[11px] text-muted-foreground">
+            Public. Used to log in whenever this wallet is active.
+          </span>
+        </label>
+      )}
+
+      {err && <p className="text-xs text-destructive">{err}</p>}
+
+      <button
+        disabled={busy}
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[image:var(--gradient-brand)] py-2.5 text-sm font-semibold text-primary-foreground shadow-glow disabled:opacity-60"
+      >
+        {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogIn className="h-4 w-4" />}
+        {existing ? "Sign in" : "Register & sign in"}
+      </button>
+    </form>
+  );
+}
