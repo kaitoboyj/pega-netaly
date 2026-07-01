@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/wallet")({
   head: () => ({
     meta: [
-      { title: "Wallets — NovaX Self-Custody" },
+      { title: "Wallets — PrimeCapital Self-Custody" },
       { name: "description", content: "Generate a BIP39 HD wallet with BIP32/44/84 derivation for BTC, ETH and every EVM chain. Encrypted locally with AES." },
-      { property: "og:title", content: "NovaX Wallets" },
+      { property: "og:title", content: "PrimeCapital Wallets" },
       { property: "og:description", content: "Non-custodial HD wallets, generated in your browser." },
     ],
   }),
@@ -143,7 +143,7 @@ function Header() {
         Wallets
       </h1>
       <p className="mt-2 text-sm text-muted-foreground max-w-2xl">
-        Keys are generated and stored <span className="text-foreground">in your browser only</span>. NovaX never sees your
+        Keys are generated and stored <span className="text-foreground">in your browser only</span>. PrimeCapital never sees your
         mnemonic. BIP39 seed · BIP32 HD · BIP44 for EVM · BIP84 for Bitcoin native segwit.
       </p>
     </div>
@@ -331,7 +331,7 @@ function WalletDetail({ wallet, onDelete }: { wallet: HDWallet; onDelete: () => 
 
         <p className="mt-4 text-xs text-muted-foreground flex items-start gap-2">
           <ShieldCheck className="h-4 w-4 shrink-0 text-success mt-0.5" />
-          This phrase never leaves your device. NovaX cannot recover it if lost.
+          This phrase never leaves your device. PrimeCapital cannot recover it if lost.
         </p>
       </div>
 

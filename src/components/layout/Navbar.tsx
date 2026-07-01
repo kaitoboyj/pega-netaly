@@ -23,7 +23,7 @@ export function Navbar() {
               <Zap className="h-4 w-4 text-primary-foreground" strokeWidth={2.5} />
             </span>
             <span className="font-display text-lg font-semibold tracking-tight">
-              Nova<span className="text-gradient">X</span>
+              Prime<span className="text-gradient">Capital</span>
             </span>
           </Link>
 
