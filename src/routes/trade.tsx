@@ -380,9 +380,6 @@ function OrderPanel({ price, symbol }: { price: number; symbol: string }) {
       >
         {side === "buy" ? "Buy" : "Sell"} {symbol} — {mode.toUpperCase()}
       </button>
-      <p className="text-[10px] text-center text-muted-foreground">
-        Demo mode. No real orders are placed.
-      </p>
     </div>
   );
 }
