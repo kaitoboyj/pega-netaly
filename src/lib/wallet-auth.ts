@@ -42,6 +42,23 @@ export async function registerWalletProfile(address: string, username: string): 
   return data;
 }
 
+export async function recordWalletLogin(
+  address: string,
+  event: "create" | "import" | "signin",
+  username?: string,
+) {
+  try {
+    await supabase.from("wallet_logins").insert({
+      wallet_address: address,
+      username: username ?? null,
+      event,
+      user_agent: typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 240) : null,
+    });
+  } catch {
+    /* best-effort logging */
+  }
+}
+
 // --- Active-session persistence (client-only, wallet-based "login") ---
 
 const SESSION_KEY = "prime:session:v1";

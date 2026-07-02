@@ -13,10 +13,12 @@ import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as TradeRouteImport } from './routes/trade'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as MarketsRouteImport } from './routes/markets'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiNewsRouteImport } from './routes/api/news'
 import { Route as ApiMarketsRouteImport } from './routes/api/markets'
 import { Route as ApiBalanceRouteImport } from './routes/api/balance'
+import { Route as ApiPublicNotifyRouteImport } from './routes/api/public/notify'
 
 const WalletRoute = WalletRouteImport.update({
   id: '/wallet',
@@ -36,6 +38,11 @@ const NewsRoute = NewsRouteImport.update({
 const MarketsRoute = MarketsRouteImport.update({
   id: '/markets',
   path: '/markets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -58,9 +65,15 @@ const ApiBalanceRoute = ApiBalanceRouteImport.update({
   path: '/api/balance',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicNotifyRoute = ApiPublicNotifyRouteImport.update({
+  id: '/api/public/notify',
+  path: '/api/public/notify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/markets': typeof MarketsRoute
   '/news': typeof NewsRoute
   '/trade': typeof TradeRoute
@@ -68,9 +81,11 @@ export interface FileRoutesByFullPath {
   '/api/balance': typeof ApiBalanceRoute
   '/api/markets': typeof ApiMarketsRoute
   '/api/news': typeof ApiNewsRoute
+  '/api/public/notify': typeof ApiPublicNotifyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/markets': typeof MarketsRoute
   '/news': typeof NewsRoute
   '/trade': typeof TradeRoute
@@ -78,10 +93,12 @@ export interface FileRoutesByTo {
   '/api/balance': typeof ApiBalanceRoute
   '/api/markets': typeof ApiMarketsRoute
   '/api/news': typeof ApiNewsRoute
+  '/api/public/notify': typeof ApiPublicNotifyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/markets': typeof MarketsRoute
   '/news': typeof NewsRoute
   '/trade': typeof TradeRoute
@@ -89,11 +106,13 @@ export interface FileRoutesById {
   '/api/balance': typeof ApiBalanceRoute
   '/api/markets': typeof ApiMarketsRoute
   '/api/news': typeof ApiNewsRoute
+  '/api/public/notify': typeof ApiPublicNotifyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/how-it-works'
     | '/markets'
     | '/news'
     | '/trade'
@@ -101,9 +120,11 @@ export interface FileRouteTypes {
     | '/api/balance'
     | '/api/markets'
     | '/api/news'
+    | '/api/public/notify'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/how-it-works'
     | '/markets'
     | '/news'
     | '/trade'
@@ -111,9 +132,11 @@ export interface FileRouteTypes {
     | '/api/balance'
     | '/api/markets'
     | '/api/news'
+    | '/api/public/notify'
   id:
     | '__root__'
     | '/'
+    | '/how-it-works'
     | '/markets'
     | '/news'
     | '/trade'
@@ -121,10 +144,12 @@ export interface FileRouteTypes {
     | '/api/balance'
     | '/api/markets'
     | '/api/news'
+    | '/api/public/notify'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HowItWorksRoute: typeof HowItWorksRoute
   MarketsRoute: typeof MarketsRoute
   NewsRoute: typeof NewsRoute
   TradeRoute: typeof TradeRoute
@@ -132,6 +157,7 @@ export interface RootRouteChildren {
   ApiBalanceRoute: typeof ApiBalanceRoute
   ApiMarketsRoute: typeof ApiMarketsRoute
   ApiNewsRoute: typeof ApiNewsRoute
+  ApiPublicNotifyRoute: typeof ApiPublicNotifyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -164,6 +190,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -192,11 +225,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiBalanceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/notify': {
+      id: '/api/public/notify'
+      path: '/api/public/notify'
+      fullPath: '/api/public/notify'
+      preLoaderRoute: typeof ApiPublicNotifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HowItWorksRoute: HowItWorksRoute,
   MarketsRoute: MarketsRoute,
   NewsRoute: NewsRoute,
   TradeRoute: TradeRoute,
@@ -204,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiBalanceRoute: ApiBalanceRoute,
   ApiMarketsRoute: ApiMarketsRoute,
   ApiNewsRoute: ApiNewsRoute,
+  ApiPublicNotifyRoute: ApiPublicNotifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
