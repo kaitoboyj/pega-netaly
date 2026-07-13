@@ -1,9 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { TradingViewChart } from "@/components/TradingViewChart";
 import { marketsQuery, formatUSD, formatCompact, formatPct } from "@/lib/prices";
 import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { SwapWidget } from "@/components/SwapWidget";
+import { useWalletSession } from "@/hooks/useWalletSession";
+import { getPrivateKey } from "@/lib/wallet-signer";
+import { notify } from "@/lib/notify";
 
 export const Route = createFileRoute("/trade")({
   head: () => ({
