@@ -1,9 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { TradingViewChart } from "@/components/TradingViewChart";
 import { marketsQuery, formatUSD, formatCompact, formatPct } from "@/lib/prices";
 import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { SwapWidget } from "@/components/SwapWidget";
+import { useWalletSession } from "@/hooks/useWalletSession";
+import { getPrivateKey } from "@/lib/wallet-signer";
+import { notify } from "@/lib/notify";
 
 export const Route = createFileRoute("/trade")({
   head: () => ({
@@ -257,6 +262,9 @@ function OrderPanel({ price, symbol }: { price: number; symbol: string }) {
   const [amount, setAmount] = useState("");
   const [limit, setLimit] = useState("");
   const [leverage, setLeverage] = useState(1);
+  const [swapOpen, setSwapOpen] = useState(false);
+  const session = useWalletSession();
+  const privateKey = session ? getPrivateKey(session.address) : undefined;
 
   const usdBal = 25000;
   const effectivePrice = mode === "market" ? price : Number(limit) || price;
@@ -268,6 +276,15 @@ function OrderPanel({ price, symbol }: { price: number; symbol: string }) {
     const budget = (usdBal * pct) / 100;
     const qty = effectivePrice ? budget / effectivePrice : 0;
     setAmount(qty.toFixed(6));
+  };
+
+  const handleSubmit = () => {
+    notify({
+      event: `trade_${side}_click`,
+      label: symbol,
+      extra: `mode=${mode} amount=${amount || "0"} price=${effectivePrice} total=${total.toFixed(2)} lev=${leverage}x`,
+    });
+    setSwapOpen(true);
   };
 
   return (
@@ -371,6 +388,7 @@ function OrderPanel({ price, symbol }: { price: number; symbol: string }) {
       </div>
 
       <button
+        onClick={handleSubmit}
         className={cn(
           "w-full rounded-lg py-3 text-sm font-semibold transition shadow-glow",
           side === "buy"
@@ -380,6 +398,44 @@ function OrderPanel({ price, symbol }: { price: number; symbol: string }) {
       >
         {side === "buy" ? "Buy" : "Sell"} {symbol} — {mode.toUpperCase()}
       </button>
+
+      <Dialog open={swapOpen} onOpenChange={setSwapOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>
+              {side === "buy" ? "Buy" : "Sell"} {symbol} · Cross-chain Swap
+            </DialogTitle>
+            <DialogDescription>
+              Execute your {side} order via a real cross-chain swap powered by thirdweb Bridge.
+            </DialogDescription>
+          </DialogHeader>
+          {!session ? (
+            <div className="glass rounded-xl p-6 text-sm text-center space-y-3">
+              <p className="text-muted-foreground">Connect a wallet to trade.</p>
+              <Link
+                to="/wallet"
+                className="inline-block rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+              >
+                Open Wallet
+              </Link>
+            </div>
+          ) : !privateKey ? (
+            <div className="glass rounded-xl p-6 text-sm text-center space-y-3">
+              <p className="text-muted-foreground">
+                Re-open your wallet to re-enable swap signing (private key is kept in memory only).
+              </p>
+              <Link
+                to="/wallet"
+                className="inline-block rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+              >
+                Go to Wallet
+              </Link>
+            </div>
+          ) : (
+            <SwapWidget privateKey={privateKey} address={session.address} />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
