@@ -119,7 +119,7 @@ function HomeWalletBalances() {
           </p>
         </div>
         <div className="mt-5 grid gap-3 md:grid-cols-3">
-          <BalanceStat title="Initial balance" value={initialBalance} caption={display?.live_balance_frozen ? "Frozen live display" : "Live wallet balance"} />
+          <BalanceStat title="Initial balance" value={initialBalance} caption={display?.live_balance_frozen ? "Frozen display" : ""} />
           <BalanceStat title="Yield" value={animatedYield.value} caption={`${animatedYield.pct >= 0 ? "+" : ""}${animatedYield.pct.toFixed(2)}%`} tone={animatedYield.pct >= 0 ? "up" : "down"} />
           <BalanceStat title="Combined total" value={total} caption="Initial + yield" />
         </div>
