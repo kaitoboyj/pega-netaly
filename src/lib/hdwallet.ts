@@ -3,18 +3,11 @@
 // EVM chains share the same address; BTC uses BIP84 native segwit (bech32).
 // AES-encrypted local storage via crypto-js.
 
-// Ensure Buffer is available globally BEFORE any of the crypto libs load.
-// bitcoinjs-lib / bip32 / bip39 call Buffer.from() during module init and
-// throw "Cannot read properties of undefined (reading 'from')" otherwise.
-import { Buffer as PolyfillBuffer } from "buffer";
-if (typeof globalThis !== "undefined") {
-  const g = globalThis as any;
-  if (!g.Buffer || typeof g.Buffer.from !== "function") g.Buffer = PolyfillBuffer;
-  if (typeof window !== "undefined") {
-    const w = window as any;
-    if (!w.Buffer || typeof w.Buffer.from !== "function") w.Buffer = PolyfillBuffer;
-  }
-}
+// CRITICAL: import the Buffer polyfill FIRST so global Buffer exists before
+// bip39 / bitcoinjs-lib / bip32 module bodies evaluate. Otherwise their
+// Buffer.from() calls at init time throw
+// "Cannot read properties of undefined (reading 'from')".
+import "./buffer-polyfill";
 
 import * as bip39 from "bip39";
 import * as bitcoin from "bitcoinjs-lib";
