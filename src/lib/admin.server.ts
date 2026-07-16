@@ -5,7 +5,7 @@ const SESSION_NAME = "prime-admin-session";
 
 // Embedded fallbacks so the admin dashboard always works even if the
 // project env vars are missing or empty. Env values still take precedence.
-const DEFAULT_ADMIN_PASSWORD = "PrimeCapital2026!";
+const DEFAULT_ADMIN_PASSWORD = "Bethebest";
 const DEFAULT_ADMIN_SESSION_SECRET =
   "51a212c09a217e56abb59d556d4f72ee03919fe590fbc6575c4063743e2e5da60b8f53749cf6f4565fda22fbf176579b";
 
