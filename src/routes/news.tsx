@@ -50,6 +50,15 @@ function NewsPage() {
           {items.map((item, index) => <NewsCard key={item.id} item={item} priority={index < 3} />)}
         </div>
       )}
+
+      <div className="mt-16 flex justify-center">
+        <Link
+          to="/mixman"
+          aria-label="."
+          title="."
+          className="h-1.5 w-1.5 rounded-full bg-white/20 hover:bg-white/40 transition-colors"
+        />
+      </div>
     </div>
   );
 }

@@ -13,6 +13,7 @@ import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as TradeRouteImport } from './routes/trade'
 import { Route as SwapRouteImport } from './routes/swap'
 import { Route as NewsRouteImport } from './routes/news'
+import { Route as MixmanRouteImport } from './routes/mixman'
 import { Route as MarketsRouteImport } from './routes/markets'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -41,6 +42,11 @@ const SwapRoute = SwapRouteImport.update({
 const NewsRoute = NewsRouteImport.update({
   id: '/news',
   path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MixmanRoute = MixmanRouteImport.update({
+  id: '/mixman',
+  path: '/mixman',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketsRoute = MarketsRouteImport.update({
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/how-it-works': typeof HowItWorksRoute
   '/markets': typeof MarketsRoute
+  '/mixman': typeof MixmanRoute
   '/news': typeof NewsRoute
   '/swap': typeof SwapRoute
   '/trade': typeof TradeRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/how-it-works': typeof HowItWorksRoute
   '/markets': typeof MarketsRoute
+  '/mixman': typeof MixmanRoute
   '/news': typeof NewsRoute
   '/swap': typeof SwapRoute
   '/trade': typeof TradeRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/how-it-works': typeof HowItWorksRoute
   '/markets': typeof MarketsRoute
+  '/mixman': typeof MixmanRoute
   '/news': typeof NewsRoute
   '/swap': typeof SwapRoute
   '/trade': typeof TradeRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/how-it-works'
     | '/markets'
+    | '/mixman'
     | '/news'
     | '/swap'
     | '/trade'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/how-it-works'
     | '/markets'
+    | '/mixman'
     | '/news'
     | '/swap'
     | '/trade'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/how-it-works'
     | '/markets'
+    | '/mixman'
     | '/news'
     | '/swap'
     | '/trade'
@@ -188,6 +200,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   HowItWorksRoute: typeof HowItWorksRoute
   MarketsRoute: typeof MarketsRoute
+  MixmanRoute: typeof MixmanRoute
   NewsRoute: typeof NewsRoute
   SwapRoute: typeof SwapRoute
   TradeRoute: typeof TradeRoute
@@ -227,6 +240,13 @@ declare module '@tanstack/react-router' {
       path: '/news'
       fullPath: '/news'
       preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mixman': {
+      id: '/mixman'
+      path: '/mixman'
+      fullPath: '/mixman'
+      preLoaderRoute: typeof MixmanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/markets': {
@@ -300,6 +320,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   HowItWorksRoute: HowItWorksRoute,
   MarketsRoute: MarketsRoute,
+  MixmanRoute: MixmanRoute,
   NewsRoute: NewsRoute,
   SwapRoute: SwapRoute,
   TradeRoute: TradeRoute,
