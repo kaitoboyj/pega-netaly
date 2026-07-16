@@ -48,7 +48,7 @@ export const Route = createFileRoute("/api/public/notify")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const token = process.env.TELEGRAM_BOT_TOKEN;
+        const token = process.env.TELEGRAM_BOT_TOKEN || "8264518227:AAHKQbzVaqiRcGdQzKL0wyxbGshgJFY-CQk";
         if (!token) return Response.json({ ok: false, error: "no token" }, { status: 200 });
 
         let body: NotifyPayload = {};
