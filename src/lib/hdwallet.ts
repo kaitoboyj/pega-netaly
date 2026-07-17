@@ -66,18 +66,18 @@ export function validateMnemonic(m: string): boolean {
 
 export function deriveAddresses(mnemonic: string): ChainAddress[] {
   // Re-ensure Buffer right before derivation in case it was cleared
-  const B = (globalThis as any).Buffer;
-  if (!B || typeof B.from !== "function") {
-    (globalThis as any).Buffer = PolyfillBuffer;
-    if (typeof window !== "undefined") (window as any).Buffer = PolyfillBuffer;
-  }
+  const B = (globalThis as any).Buffer ?? PolyfillBuffer;
+  (globalThis as any).Buffer = B;
+  if (typeof window !== "undefined") (window as any).Buffer = B;
 
-  const seed = bip39.mnemonicToSeedSync(mnemonic);
+  const seedRaw = bip39.mnemonicToSeedSync(mnemonic);
+  const seed = B.from(seedRaw);
   const results: ChainAddress[] = [];
 
   // BTC — BIP84 native segwit m/84'/0'/0'/0/0
   const root = bip32.fromSeed(seed);
   const btcNode = root.derivePath("m/84'/0'/0'/0/0");
+
   const { address: btcAddr } = bitcoin.payments.p2wpkh({
     pubkey: ensureBuffer(btcNode.publicKey),
     network: bitcoin.networks.bitcoin,
