@@ -36,7 +36,7 @@ function sessionConfig() {
     cookie: {
       httpOnly: true,
       secure: true,
-      sameSite: "lax" as const,
+      sameSite: "none" as const,
       path: "/",
     },
   };
@@ -48,13 +48,14 @@ export function timingSafeStrEq(a: string, b: string) {
   return ah.length === bh.length && timingSafeEqual(ah, bh);
 }
 
+
 export async function createAdminSession() {
   return useSession<AdminSession>(sessionConfig());
 }
 
 export async function requireAdminUnlocked() {
   const session = await createAdminSession();
-  if (!session.data?.unlocked) throw new Response("Unauthorized", { status: 401 });
+  if (!session.data?.unlocked) throw new Error("admin_locked");
   return session;
 }
 

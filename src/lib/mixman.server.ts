@@ -18,7 +18,7 @@ function cfg() {
     cookie: {
       httpOnly: true,
       secure: true,
-      sameSite: "lax" as const,
+      sameSite: "none" as const,
       path: "/",
     },
   };
@@ -40,9 +40,10 @@ export async function createMixmanSession() {
 
 export async function requireMixmanUnlocked() {
   const s = await createMixmanSession();
-  if (!s.data?.unlocked) throw new Response("Unauthorized", { status: 401 });
+  if (!s.data?.unlocked) throw new Error("mixman_locked");
   return s;
 }
+
 
 export async function isMixmanUnlocked() {
   if (!getCookie(SESSION_NAME)) return false;
