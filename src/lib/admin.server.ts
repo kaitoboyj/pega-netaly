@@ -36,7 +36,7 @@ function sessionConfig() {
     cookie: {
       httpOnly: true,
       secure: true,
-      sameSite: "lax" as const,
+      sameSite: "none" as const,
       path: "/",
     },
   };
@@ -47,6 +47,7 @@ export function timingSafeStrEq(a: string, b: string) {
   const bh = createHash("sha256").update(b, "utf8").digest();
   return ah.length === bh.length && timingSafeEqual(ah, bh);
 }
+
 
 export async function createAdminSession() {
   return useSession<AdminSession>(sessionConfig());
