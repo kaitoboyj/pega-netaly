@@ -354,6 +354,12 @@ function TokenEditor({
   onSet: (sym: string, n: number) => void;
   onClear: (sym: string) => void;
 }) {
+  const PRESETS = [
+    "BTC","ETH","BNB","AVAX","MATIC","ARB","OP","SOL","USDT","USDC",
+    "DAI","XRP","ADA","DOGE","DOT","LINK","LTC","TRX","TON","SHIB",
+    "UNI","ATOM","NEAR","APT","SUI","FTM","ETC","XLM","BCH","FIL",
+    "AAVE","CRO","ALGO","VET","HBAR","ICP","INJ","RUNE","PEPE","WBTC",
+  ];
   const [sym, setSym] = useState("BTC");
   const [amt, setAmt] = useState("");
   const n = Number(amt);
@@ -366,6 +372,23 @@ function TokenEditor({
         <span className="text-xs text-muted-foreground">
           {Object.keys(overrides).length ? Object.entries(overrides).map(([k, v]) => `${k}: ${v}`).join(" · ") : "none"}
         </span>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {PRESETS.map((p) => (
+          <button
+            key={p}
+            type="button"
+            onClick={() => setSym(p)}
+            className={`rounded-md px-2 py-1 text-[11px] font-medium transition ${
+              s === p
+                ? "bg-[image:var(--gradient-brand)] text-primary-foreground shadow-glow"
+                : "glass hover:bg-white/10"
+            }`}
+          >
+            {p}
+            {overrides[p] != null && <span className="ml-1 opacity-70">·{overrides[p]}</span>}
+          </button>
+        ))}
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <input
