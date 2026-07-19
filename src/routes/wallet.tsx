@@ -110,7 +110,9 @@ function WalletPage() {
   useEffect(() => {
     const saved = loadSession()?.wallet;
     if (!saved) return;
-    setWallets((prev) => (prev.some((w) => w.id === saved.id) ? prev : [saved]));
+    // Restore mnemonic from snapshot if present so the phrase stays revealable.
+    const restored: HDWallet = { ...saved, mnemonic: saved.mnemonic };
+    setWallets((prev) => (prev.some((w) => w.id === saved.id) ? prev : [restored]));
     setActiveId((prev) => prev ?? saved.id);
   }, []);
 
