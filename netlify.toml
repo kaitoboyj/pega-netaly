@@ -11,6 +11,19 @@ skip_processing = false
 
 [functions]
 node_bundler = "esbuild"
+included_files = ["node_modules/**"]
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+
+[[headers]]
+for = "/*"
+[headers.values]
+X-Frame-Options = "DENY"
+X-XSS-Protection = "1; mode=block"
+Content-Security-Policy = "default-src 'self' https: 'unsafe-inline' 'unsafe-eval'"
 
 # All app env vars live in .env at the repo root and are committed on
 # purpose so `git clone && bun install && bun dev` works standalone.
