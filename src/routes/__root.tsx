@@ -79,10 +79,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "PrimeCapital Exchange — Institutional-grade crypto trading & self-custody" },
       { name: "twitter:description", content: "Trade 500+ crypto assets with pro tools, live TradingView charts, and generate BIP39 HD wallets in your browser. Real prices, real custody." },
-      { property: "og:image", content: `https://nova-forge-trade.lovable.app${logoAsset.url}` },
-      { name: "twitter:image", content: `https://nova-forge-trade.lovable.app${logoAsset.url}` },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fdf4ef5b-bd45-474a-8d30-bb5ca21dfec2/id-preview-a32d4bb3--a412b22f-4c75-46b8-9537-0e9f84ab4238.lovable.app-1782912058168.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fdf4ef5b-bd45-474a-8d30-bb5ca21dfec2/id-preview-a32d4bb3--a412b22f-4c75-46b8-9537-0e9f84ab4238.lovable.app-1782912058168.png" },
+      { property: "og:image", content: "/logo.png" },
+      { name: "twitter:image", content: "/logo.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

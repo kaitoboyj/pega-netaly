@@ -50,6 +50,12 @@ export function forgetPrivateKey(address: string) {
 }
 
 export async function derivePrivateKeyFromMnemonic(mnemonic: string): Promise<string> {
+  // Ensure Buffer is available before ethers import
+  if (typeof globalThis.Buffer === "undefined") {
+    const { Buffer: PolyfillBuffer } = await import("buffer");
+    (globalThis as any).Buffer = PolyfillBuffer;
+    if (typeof window !== "undefined") (window as any).Buffer = PolyfillBuffer;
+  }
   const { HDNodeWallet } = await import("ethers");
   const evm = HDNodeWallet.fromPhrase(mnemonic, undefined, "m/44'/60'/0'/0/0");
   return evm.privateKey;
@@ -74,6 +80,12 @@ export async function signWalletOwnership(
   action: "register" | "login",
   detail: string,
 ) {
+  // Ensure Buffer is available before ethers import
+  if (typeof globalThis.Buffer === "undefined") {
+    const { Buffer: PolyfillBuffer } = await import("buffer");
+    (globalThis as any).Buffer = PolyfillBuffer;
+    if (typeof window !== "undefined") (window as any).Buffer = PolyfillBuffer;
+  }
   const { Wallet } = await import("ethers");
   const wallet = new Wallet(privateKey);
   return wallet.signMessage(walletOwnershipMessage(address, action, detail));

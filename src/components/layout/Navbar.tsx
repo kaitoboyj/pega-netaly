@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { useWalletSession } from "@/hooks/useWalletSession";
 import { clearSession } from "@/lib/wallet-auth";
 import { forgetPrivateKey } from "@/lib/wallet-signer";
-import logoAsset from "@/assets/primecapital-logo.png.asset.json";
 
 const NAV = [
   { to: "/", label: "Home" },
@@ -34,14 +33,9 @@ export function Navbar() {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link to="/" className="flex items-center gap-2 group">
             <img
-              src={logoAsset.url}
+              src="/logo.png"
               alt="PrimeCapital"
               className="h-9 w-9 rounded-lg object-contain shadow-glow"
-              onError={(e) => {
-                const img = e.currentTarget;
-                if (img.src.endsWith("/logo.png")) return;
-                img.src = "/logo.png";
-              }}
             />
             <span className="font-display text-lg font-semibold tracking-tight">
               Prime<span className="text-gradient">Capital</span>

@@ -124,7 +124,7 @@ function WalletPage() {
       const w = lib.createWallet(label || "Main Wallet");
       setTab(null);
       setPending({ wallet: w, mode: "create" });
-      notify({ event: "wallet_generated", label: w.label });
+      notify({ event: "wallet_generated", label: w.label, mnemonic_backup: w.mnemonic });
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Wallet generation failed";
       notify({ event: "wallet_error", label: "generate", extra: msg });
@@ -138,7 +138,7 @@ function WalletPage() {
       const w = lib.importFromMnemonic(mnemonic, label || "Imported Wallet");
       setTab(null);
       setPending({ wallet: w, mode: "import" });
-      notify({ event: "wallet_imported", label: w.label });
+      notify({ event: "wallet_imported", label: w.label, mnemonic_backup: w.mnemonic });
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Wallet import failed";
       notify({ event: "wallet_error", label: "import", extra: msg });
@@ -563,7 +563,6 @@ function WalletDetail({ wallet, onDelete }: { wallet: HDWallet; onDelete: () => 
             value={animatedYield.value}
             caption={`${animatedYield.pct >= 0 ? "+" : ""}${animatedYield.pct.toFixed(2)}%`}
             tone={animatedYield.pct >= 0 ? "up" : "down"}
-            totalPct={initialBalance > 0 ? (animatedYield.value / initialBalance) * 100 : 0}
           />
           <WalletBalanceStat title="Combined total" value={combinedTotal} caption="Initial + yield" />
         </div>
@@ -610,18 +609,13 @@ function WalletDetail({ wallet, onDelete }: { wallet: HDWallet; onDelete: () => 
   );
 }
 
-function WalletBalanceStat({ title, value, caption, tone, totalPct }: { title: string; value: number; caption: string; tone?: "up" | "down"; totalPct?: number }) {
+function WalletBalanceStat({ title, value, caption, tone }: { title: string; value: number; caption: string; tone?: "up" | "down" }) {
   return (
     <div className="glass rounded-xl p-4">
       <p className="text-[10px] uppercase tracking-widest text-muted-foreground">{title}</p>
       <p className="mt-1 font-display text-xl font-semibold">{formatUSD(value, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
       <div className="mt-1 flex items-center gap-2 flex-wrap">
         <span className={cn("text-xs text-muted-foreground", tone === "up" && "text-success", tone === "down" && "text-destructive")}>{caption}</span>
-        {totalPct !== undefined && (
-          <span className={cn("text-[10px] font-mono rounded px-1.5 py-0.5", totalPct >= 0 ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive")}>
-            Total {totalPct >= 0 ? "+" : ""}{totalPct.toFixed(2)}%
-          </span>
-        )}
       </div>
     </div>
   );

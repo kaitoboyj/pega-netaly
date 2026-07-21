@@ -7,9 +7,11 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 grid gap-10 md:grid-cols-4">
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[image:var(--gradient-brand)]">
-              <Zap className="h-3.5 w-3.5 text-primary-foreground" strokeWidth={2.5} />
-            </span>
+            <img
+              src="/logo.png"
+              alt="PrimeCapital"
+              className="h-7 w-7 rounded-lg object-contain"
+            />
             <span className="font-display text-base font-semibold">Prime<span className="text-gradient">Capital</span></span>
           </div>
           <p className="text-sm text-muted-foreground max-w-xs">
