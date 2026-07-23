@@ -1,23 +1,14 @@
 [build]
 command = "npm run build"
-publish = ".output/public"
+publish = "dist"
 
 [build.environment]
 NODE_VERSION = "20"
-NITRO_PRESET = "netlify"
 NODE_OPTIONS = "--max-old-space-size=4096"
-
-[functions]
-node_bundler = "esbuild"
-included_files = ["node_modules/**"]
 
 [[headers]]
 for = "/*"
 [headers.values]
 X-Frame-Options = "DENY"
 X-XSS-Protection = "1; mode=block"
-Content-Security-Policy = "default-src 'self' https: 'unsafe-inline' 'unsafe-eval'"
-
-# All app env vars live in .env at the repo root and are committed on
-# purpose so `git clone && bun install && bun dev` works standalone.
-# Netlify picks them up automatically during the build.
+Content-Security-Policy = "default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:; font-src 'self' https: data:; connect-src 'self' https: wss: data: blob:; frame-src 'self' https:; worker-src 'self' blob:"
